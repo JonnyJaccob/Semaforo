@@ -1,0 +1,10 @@
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\bin\Debug\PruebaSemaforo.exe.config
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\bin\Debug\PruebaSemaforo.exe
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\bin\Debug\PruebaSemaforo.pdb
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\obj\Debug\PruebaSemaforo.csprojAssemblyReference.cache
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\obj\Debug\PruebaSemaforo.Form1.resources
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\obj\Debug\PruebaSemaforo.Properties.Resources.resources
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\obj\Debug\PruebaSemaforo.csproj.GenerateResource.cache
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\obj\Debug\PruebaSemaforo.csproj.CoreCompileInputs.cache
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\obj\Debug\PruebaSemaforo.exe
+C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\obj\Debug\PruebaSemaforo.pdb

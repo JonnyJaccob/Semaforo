@@ -1,0 +1,11 @@
+﻿'PruebaSemaforo.exe' (CLR v4.0.30319: DefaultDomain): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll' cargado. No se encuentra el archivo PDB o no se puede abrir.
+'PruebaSemaforo.exe' (CLR v4.0.30319: DefaultDomain): 'C:\Users\jacco\OneDrive\Documentos\Repositorios\PruebaSemaforo\PruebaSemaforo\bin\Debug\PruebaSemaforo.exe' cargado. Símbolos cargados.
+'PruebaSemaforo.exe' (CLR v4.0.30319: PruebaSemaforo.exe): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Windows.Forms\v4.0_4.0.0.0__b77a5c561934e089\System.Windows.Forms.dll' cargado. No se encuentra el archivo PDB o no se puede abrir.
+'PruebaSemaforo.exe' (CLR v4.0.30319: PruebaSemaforo.exe): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll' cargado. No se encuentra el archivo PDB o no se puede abrir.
+'PruebaSemaforo.exe' (CLR v4.0.30319: PruebaSemaforo.exe): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Drawing\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Drawing.dll' cargado. No se encuentra el archivo PDB o no se puede abrir.
+'PruebaSemaforo.exe' (CLR v4.0.30319: PruebaSemaforo.exe): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll' cargado. No se encuentra el archivo PDB o no se puede abrir.
+'PruebaSemaforo.exe' (CLR v4.0.30319: PruebaSemaforo.exe): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll' cargado. No se encuentra el archivo PDB o no se puede abrir.
+'PruebaSemaforo.exe' (CLR v4.0.30319: PruebaSemaforo.exe): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll' cargado. No se encuentra el archivo PDB o no se puede abrir.
+'PruebaSemaforo.exe' (CLR v4.0.30319: PruebaSemaforo.exe): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\Accessibility\v4.0_4.0.0.0__b03f5f7f11d50a3a\Accessibility.dll' cargado. No se encuentra el archivo PDB o no se puede abrir.
+'PruebaSemaforo.exe' (CLR v4.0.30319: PruebaSemaforo.exe): 'C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\mscorlib.resources\v4.0_4.0.0.0_es_b77a5c561934e089\mscorlib.resources.dll' cargado. El módulo se compiló sin símbolos.
+El programa '[7776] PruebaSemaforo.exe' terminó con código 0 (0x0).

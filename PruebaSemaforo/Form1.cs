@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Drawing.Text;
+using System.IO;
 
 namespace PruebaSemaforo
 {
@@ -50,10 +51,11 @@ namespace PruebaSemaforo
 		private static Color amarillo = Semaforo.amarillo;
 		private static Color rojo = Semaforo.rojo;
 		private static Color fondo = Semaforo.fondo;
-		private static string imagenNormal = @"C:\Users\jacco\OneDrive\Documentos\Repositorios\SemaforoEleazar\PruebaSemaforo\Resources\SemaforoApag1_2.png";
-		private static string imagenVerde = @"C:\Users\jacco\OneDrive\Documentos\Repositorios\SemaforoEleazar\PruebaSemaforo\Resources\SemaforoVerde1.png";
-		private static string imagenAmbar = @"C:\Users\jacco\OneDrive\Documentos\Repositorios\SemaforoEleazar\PruebaSemaforo\Resources\SemaforoAmarillo1.png";
-		private static string imagenRojo = @"C:\Users\jacco\OneDrive\Documentos\Repositorios\SemaforoEleazar\PruebaSemaforo\Resources\SemaforoRojo1.png";
+		static string rutaBase = Application.StartupPath;
+		private static string imagenNormal = Path.Combine(rutaBase, "SemaforoApag1_2.png");
+		private static string imagenVerde = Path.Combine(rutaBase, "SemaforoVerde1.png");
+		private static string imagenAmbar = Path.Combine(rutaBase, "SemaforoAmarillo1.png");
+		private static string imagenRojo = Path.Combine(rutaBase, "SemaforoRojo1.png");
 
 		private void btnSalir_Click(object sender, EventArgs e)
 		{
@@ -67,7 +69,7 @@ namespace PruebaSemaforo
 				lblContador.Text = valor;
 			}else
 			{
-				lblContador.Text = "0" + valor;
+				lblContador.Text =  " "+valor;
 			}
 			lblContador.ForeColor = color;
 		}
@@ -87,6 +89,9 @@ namespace PruebaSemaforo
 			_detener = true;
 
 			Iniciar();
+			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
+			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
@@ -101,9 +106,10 @@ namespace PruebaSemaforo
 		{
 			segundos += 0.5; // Incrementar el contador de segundos
 
-			int valor = 1;
+			double valor = 1;
 			try
 			{
+				
 				valor = semaforo.SemaforoTiempo(segundos);
 			}
 			catch (Exception ex)
@@ -135,7 +141,16 @@ namespace PruebaSemaforo
 			switch (semaforo.Fase)
 			{
 				case 1 when semaforo.blnNorte_Sur:
-					picSemaforoNorte.Image = Image.FromFile(imagenVerde);
+					try
+					{
+						picSemaforoNorte.Image = Image.FromFile(imagenVerde);
+					}
+					catch (Exception)
+					{
+
+						throw;
+					}
+					
 					picSemaforoSur.Image = Image.FromFile(imagenVerde);
 					rdbNVerde.Checked = true;
 					rdbSVerde.Checked = true;
@@ -215,12 +230,12 @@ namespace PruebaSemaforo
 				default:
 					break;
 			}
-			FormatoContador(valor.ToString(), semaforo.colorLetrero); // Actualizar la etiqueta con el nuevo valor
+			FormatoContador(Math.Truncate(valor)+"", semaforo.colorLetrero); // Actualizar la etiqueta con el nuevo valor
 			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
 			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
 			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
 		}
-
+		Timer _timer2;
 		private void btnDetener_Click(object sender, EventArgs e)
 		{
 			// Activar la variable de detener para salir del bucle
@@ -236,7 +251,19 @@ namespace PruebaSemaforo
 			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
 			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
 			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+			_timer2 = new Timer();
+			_timer2.Interval = 2000; // 2000 ms = 2 segundos
+			_timer2.Tick += Timer_Tick2;
 		}
+
+		private void Timer_Tick2(object sender, EventArgs e)
+		{
+			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
+			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+			_timer2.Stop();
+		}
+
 		private FontFamily CargarFuente(byte[] fuente)
 		{
 			FontFamily fuenteNueva;
@@ -293,9 +320,12 @@ namespace PruebaSemaforo
 
 			// Crear y configurar el temporizador
 			_timer = new Timer();
-			_timer.Interval = 1000; // 1000 ms = 1 segundo
+			_timer.Interval = 500; // 500 ms = medio segundo
 			_timer.Tick += Timer_Tick1; // Asignar el manejador de eventos
 			_timer.Start(); // Iniciar el temporizador
+			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
+			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
 		}
 		private void Timer_Tick1(object sender, EventArgs e)
 		{
@@ -337,6 +367,13 @@ namespace PruebaSemaforo
 				// Liberar los recursos del temporizador
 				_timer.Dispose();
 				_timer = null;
+				picSemaforoNorte.Image = Image.FromFile(imagenNormal);
+				picSemaforoSur.Image = Image.FromFile(imagenNormal);
+				picSemaforoEste.Image = Image.FromFile(imagenNormal);
+				picSemaforoOeste.Image = Image.FromFile(imagenNormal);
+				picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+				picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
+				picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
 
 				return;
 			}

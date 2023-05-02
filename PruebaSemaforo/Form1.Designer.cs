@@ -61,7 +61,6 @@
 			this.groupBox5.SuspendLayout();
 			this.groupBox4.SuspendLayout();
 			this.groupBox3.SuspendLayout();
-			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSemaforoNorte)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSemaforoEste)).BeginInit();
@@ -308,12 +307,12 @@
 			// groupBox2
 			// 
 			this.groupBox2.BackColor = System.Drawing.Color.White;
-			this.groupBox2.Controls.Add(this.lblContador);
-			this.groupBox2.Location = new System.Drawing.Point(404, 321);
+			this.groupBox2.Location = new System.Drawing.Point(589, 271);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(79, 88);
 			this.groupBox2.TabIndex = 0;
 			this.groupBox2.TabStop = false;
+			this.groupBox2.Visible = false;
 			// 
 			// lblContador
 			// 
@@ -324,11 +323,11 @@
 			this.lblContador.BackColor = System.Drawing.SystemColors.GrayText;
 			this.lblContador.Font = new System.Drawing.Font("Algerian", 40F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblContador.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-			this.lblContador.Location = new System.Drawing.Point(1, 20);
+			this.lblContador.Location = new System.Drawing.Point(409, 341);
 			this.lblContador.Name = "lblContador";
-			this.lblContador.Size = new System.Drawing.Size(89, 60);
+			this.lblContador.Size = new System.Drawing.Size(57, 60);
 			this.lblContador.TabIndex = 0;
-			this.lblContador.Text = "00";
+			this.lblContador.Text = "0";
 			this.lblContador.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// pictureBox1
@@ -345,9 +344,9 @@
 			// 
 			this.picSemaforoNorte.Image = global::PruebaSemaforo.Properties.Resources.SemaforoApag1_2;
 			this.picSemaforoNorte.InitialImage = global::PruebaSemaforo.Properties.Resources.SemaforoApag1_1;
-			this.picSemaforoNorte.Location = new System.Drawing.Point(472, 242);
+			this.picSemaforoNorte.Location = new System.Drawing.Point(466, 271);
 			this.picSemaforoNorte.Name = "picSemaforoNorte";
-			this.picSemaforoNorte.Size = new System.Drawing.Size(41, 56);
+			this.picSemaforoNorte.Size = new System.Drawing.Size(56, 41);
 			this.picSemaforoNorte.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.picSemaforoNorte.TabIndex = 6;
 			this.picSemaforoNorte.TabStop = false;
@@ -369,7 +368,7 @@
 			this.picSemaforoSur.InitialImage = global::PruebaSemaforo.Properties.Resources.SemaforoApag1_1;
 			this.picSemaforoSur.Location = new System.Drawing.Point(391, 433);
 			this.picSemaforoSur.Name = "picSemaforoSur";
-			this.picSemaforoSur.Size = new System.Drawing.Size(41, 56);
+			this.picSemaforoSur.Size = new System.Drawing.Size(56, 41);
 			this.picSemaforoSur.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.picSemaforoSur.TabIndex = 8;
 			this.picSemaforoSur.TabStop = false;
@@ -390,6 +389,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1122, 749);
+			this.Controls.Add(this.lblContador);
 			this.Controls.Add(this.picSemaforoOeste);
 			this.Controls.Add(this.picSemaforoSur);
 			this.Controls.Add(this.picSemaforoEste);
@@ -413,14 +413,13 @@
 			this.groupBox4.PerformLayout();
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox3.PerformLayout();
-			this.groupBox2.ResumeLayout(false);
-			this.groupBox2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSemaforoNorte)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSemaforoEste)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSemaforoSur)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picSemaforoOeste)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 

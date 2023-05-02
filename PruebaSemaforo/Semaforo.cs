@@ -11,7 +11,7 @@ namespace PruebaSemaforo
 	{
 		public Semaforo()
 		{
-			FaseFijoVerde = 5;
+			FaseFijoVerde = 17.5;
 			FaseParpadeoVerde = 3;
 			FijoAmarillo = 3;
 			FijoRojo = 2;
@@ -19,7 +19,7 @@ namespace PruebaSemaforo
 			blnEste_Oeste = false;
 			Fase = 1;
 		}
-		private static int FaseFijoVerde;
+		private static double FaseFijoVerde;
 		private static int FaseParpadeoVerde;
 		private static int FijoAmarillo;
 		private static int FijoRojo;
@@ -103,6 +103,7 @@ namespace PruebaSemaforo
 		{
 			switch (numero)
 			{
+				case 0 when Fase == 1:
 				case 1 when Fase == 1:
 				case 1.5 when Fase == 1:
 				case 2 when Fase == 1:
@@ -136,19 +137,22 @@ namespace PruebaSemaforo
 				case 15.5 when Fase == 1:
 				case 16 when Fase == 1:
 				case 16.5 when Fase == 1:
+					colorLetrero = verde;
+					break;
 				case 17 when Fase == 1:
 					colorLetrero = verde;
 					break;
 				case 17.5 when Fase == 1:
 					Fase = 2;
 					numero = 1;
-					colorLetrero = verde;
+					colorLetrero = fondo;
 					break;
-				
 				case 1.5 when Fase == 2:
 				case 2.5 when Fase == 2:
 					colorLetrero = fondo;
 					break;
+				case 0 when Fase == 2:
+				case 0.5 when Fase == 2:
 				case 2 when Fase == 2:
 				case 1 when Fase == 2:
 				case 3 when Fase == 2:
@@ -157,12 +161,15 @@ namespace PruebaSemaforo
 				case 3.5 when Fase == 2:
 					Fase = 3;
 					numero = 1;
-					colorLetrero = amarillo;
+					colorLetrero = fondo;
 					break;
+				case 0:
 				case 1 when Fase == 3:
 				case 1.5 when Fase == 3:
 				case 2 when Fase == 3:
 				case 2.5 when Fase == 3:
+					colorLetrero = fondo;
+					break;
 				case 3 when Fase == 3:
 					colorLetrero = amarillo;
 					break;
@@ -174,10 +181,11 @@ namespace PruebaSemaforo
 				case 1 when Fase == 4:
 				case 1.5 when Fase == 4:
 				case 2 when Fase == 4:
+				case 2.5 when Fase == 4:
 					colorLetrero = rojo;
 					break;
-				case 2.5 when Fase == 4:
-					colorLetrero = verde;
+				case 3 when Fase == 4:
+					colorLetrero = fondo;
 					Fase = 1;
 					numero = 1;
 					if(blnNorte_Sur)
@@ -191,8 +199,7 @@ namespace PruebaSemaforo
 						blnNorte_Sur = true;
 					}
 					break;
-				default:
-					throw new Exception("Ocurrio algo inesperado");
+				default:break;
 			}
 			return (int)numero;
 		}

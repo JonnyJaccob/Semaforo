@@ -56,6 +56,7 @@
 			this.picSemaforoEste = new System.Windows.Forms.PictureBox();
 			this.picSemaforoSur = new System.Windows.Forms.PictureBox();
 			this.picSemaforoOeste = new System.Windows.Forms.PictureBox();
+			this.lblCrono = new System.Windows.Forms.Label();
 			this.groupBox1.SuspendLayout();
 			this.groupBox6.SuspendLayout();
 			this.groupBox5.SuspendLayout();
@@ -384,11 +385,28 @@
 			this.picSemaforoOeste.TabIndex = 9;
 			this.picSemaforoOeste.TabStop = false;
 			// 
+			// lblCrono
+			// 
+			this.lblCrono.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblCrono.AutoSize = true;
+			this.lblCrono.BackColor = System.Drawing.SystemColors.Desktop;
+			this.lblCrono.Font = new System.Drawing.Font("Algerian", 40F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblCrono.ForeColor = System.Drawing.Color.Red;
+			this.lblCrono.Location = new System.Drawing.Point(138, 213);
+			this.lblCrono.Name = "lblCrono";
+			this.lblCrono.Size = new System.Drawing.Size(245, 60);
+			this.lblCrono.TabIndex = 10;
+			this.lblCrono.Text = "00:00.00";
+			this.lblCrono.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1122, 749);
+			this.Controls.Add(this.lblCrono);
 			this.Controls.Add(this.lblContador);
 			this.Controls.Add(this.picSemaforoOeste);
 			this.Controls.Add(this.picSemaforoSur);
@@ -453,6 +471,7 @@
 		private System.Windows.Forms.PictureBox picSemaforoEste;
 		private System.Windows.Forms.PictureBox picSemaforoSur;
 		private System.Windows.Forms.PictureBox picSemaforoOeste;
+		private System.Windows.Forms.Label lblCrono;
 	}
 }
 

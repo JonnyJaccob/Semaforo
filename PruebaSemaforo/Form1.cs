@@ -26,7 +26,7 @@ namespace PruebaSemaforo
 			InitializeComponent();
 			// Inicializar el temporizador
 			timer.Interval = 500;
-			timer.Tick += new EventHandler(Timer_Tick);
+			//timer.Tick += new EventHandler(Timer_Tick);
 
 			//Cargar fuente personalizada
 			Font fuente_DS_DIGI = new Font(CargarFuente(Properties.Resources.DS_DIGI), 27, FontStyle.Regular);
@@ -44,8 +44,20 @@ namespace PruebaSemaforo
 			groupBox2.BackColor = fondo;
 			lblContador.BackColor = fondo;
 			lblContador.ForeColor = fondo;
+
+			lblCrono.Font = fuente_DS_DIGIT;
+			ptimer = new Timer();
+			ptimer.Interval = 500;
+			ptimer.Tick += Ptimer_Tick;
+
+			timerx.Interval = 250; //250 ms
+			timerx.Tick += new EventHandler(Timerx_Tick);
 		}
+		private Timer ptimer;
+		private int segun = 0;
+		private int milisegundos = 0;
 		static Timer timer = new Timer(); // Declarar un temporizador para contar los segundos
+		static Timer timerx = new Timer();
 		static double segundos = 0; // Declarar la variable para el contador de segundos
 		private static Color verde = Semaforo.verde;
 		private static Color amarillo = Semaforo.amarillo;
@@ -64,23 +76,197 @@ namespace PruebaSemaforo
 		}
 		private void FormatoContador(string valor, Color color)
 		{
-			if(valor.Length > 1)
+			if (valor.Length > 1)
 			{
 				lblContador.Text = valor;
-			}else
+			} else
 			{
-				lblContador.Text =  " "+valor;
+				lblContador.Text = " " + valor;
 			}
 			lblContador.ForeColor = color;
 		}
 		Semaforo semaforo;
+		bool blnNorte_Sur = true;
 		private void Iniciar()
 		{
-			timer.Start(); // Iniciar el temporizador
-			segundos = 1; // Reiniciar el contador de segundos
+			//timer.Start(); // Iniciar el temporizador
+
+			timerx.Start();
+			ptimer.Stop();
+			lblCrono.Text = "0";
+			segun = 0;
+			milisegundos = 0;
+			ptimer.Start();
+			segundos = 0; // Reiniciar el contador de segundos
 			fase = 1;
+			FASES = 1;
 			semaforo = new Semaforo();
-			FormatoContador("0",verde); // Actualizar la etiqueta con el valor inicial
+			blnNorte_Sur = true;
+			FormatoContador("0", verde); // Actualizar la etiqueta con el valor inicial
+		}
+		private void Ptimer_Tick(object sender, EventArgs e)
+		{
+			milisegundos += 500;
+			if (milisegundos == 1000)
+			{
+				milisegundos = 0;
+				segun++;
+			}
+
+			lblCrono.Text = segun.ToString() + ":" + milisegundos.ToString("D3");
+			AcomodarSemaforo();
+		}
+		int FASES = 1;
+		int Segverde1 = 8;
+		int SegVerde2 = 3;
+		int SegAmbar = 3;
+		int SegRojo = 2;
+		string strColor = "";
+		bool xc = false;
+		private void Timerx_Tick(object sender, EventArgs e)
+		{
+			segundos += 0.25; // Incrementar el contador de segundos
+			double valor = Math.Truncate(segundos);
+			switch (FASES)
+			{
+				case 1 when (segundos > 0 && segundos <= Segverde1):
+					FormatoContador(valor.ToString(), verde);
+					strColor = "Verde";
+					break;
+				case 1 when (segundos == Segverde1 + 0.5):
+					FormatoContador(valor.ToString(), fondo);
+					strColor = "Fondo";
+					FASES = 2;
+					segundos = 0.5;
+					segun = 0;
+					milisegundos = 500;
+					break;
+				case 2 when (segundos > 0.5 && segundos <= SegVerde2):
+					if (segundos == 1 || segundos == 2 || segundos == 3)
+					{
+						FormatoContador(valor.ToString(), verde);
+						strColor = "Verde";
+					}
+					if (segundos == 1.5 || segundos == 2.5 || segundos == 3.5)
+					{
+						FormatoContador(valor.ToString(), fondo);
+						strColor = "Fondo";
+					}
+					break;
+				case 2 when (segundos == SegVerde2 + 0.5):
+					FormatoContador(valor.ToString(), fondo);
+					strColor = "Fondo";
+					FASES = 3;
+					segundos = 0.5;
+					segun = 0;
+					milisegundos = 500;
+					break;
+				case 3 when (segundos > 0.5 && segundos <= SegAmbar):
+					if (segundos >= 1)
+					{
+						FormatoContador(valor.ToString(), amarillo);
+						strColor = "Ambar";
+					}
+					break;
+				case 3 when (segundos == SegAmbar + 0.5):
+					FormatoContador(valor.ToString(), fondo);
+					strColor = "Fondo";
+					FASES = 4;
+					segundos = 0.5;
+					segun = 0;
+					milisegundos = 500;
+					break;
+				case 4 when (segundos > 0.5 && segundos <= SegRojo):
+					if (segundos >= 1)
+					{
+						FormatoContador(valor.ToString(), rojo);
+						strColor = "Rojo";
+					}
+					break;
+				case 4 when (segundos == SegRojo + 0.5):
+					FormatoContador(valor.ToString(), fondo);
+					strColor = "Fondo";
+					FASES = 1;
+					segundos = 1;
+					segun = 0;
+					milisegundos = 1000;
+					if (blnNorte_Sur)
+					{
+						blnNorte_Sur = false;
+					} else
+					{
+						blnNorte_Sur = true;
+					}
+					break;
+				default:
+					break;
+			}
+			if (strColor == "Verde")
+			{
+				CambiarSemaforo(imagenVerde, blnNorte_Sur);
+			}
+			else
+			if (strColor == "Ambar")
+			{
+				CambiarSemaforo(imagenAmbar, blnNorte_Sur);
+
+			}
+			else
+			if (strColor == "Rojo")
+			{
+				CambiarSemaforo(imagenRojo, blnNorte_Sur);
+
+			}
+			else
+			{
+				CambiarSemaforo(imagenNormal, blnNorte_Sur);
+
+			}
+		}
+		private void CambiarSemaforo(string ruta, bool IsNorteSur)
+		{
+			
+			if (IsNorteSur)
+			{
+				Bitmap TempNorte = new Bitmap(ruta);
+				TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
+				Bitmap TempSur = new Bitmap(ruta);
+				TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
+				Bitmap TempOeste = new Bitmap(imagenRojo);
+				TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
+				Bitmap TempEste = new Bitmap(imagenRojo);
+
+				picSemaforoNorte.Image = TempNorte;
+				picSemaforoSur.Image = TempSur;
+				picSemaforoOeste.Image = TempOeste;
+				picSemaforoEste.Image = TempEste;
+			}
+			else
+			{
+				Bitmap TempNorte = new Bitmap(imagenRojo);
+				TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
+				Bitmap TempSur = new Bitmap(imagenRojo);
+				TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
+				Bitmap TempOeste = new Bitmap(ruta);
+				TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
+				Bitmap TempEste = new Bitmap(ruta);
+
+				picSemaforoNorte.Image = TempNorte;
+				picSemaforoSur.Image = TempSur;
+				picSemaforoOeste.Image = TempOeste;
+				picSemaforoEste.Image = TempEste;
+			}
+		}
+		private void AcomodarSemaforo()
+		{
+			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
+			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+			picSemaforoNorte.Size =
+			picSemaforoSur.Size = new Size(56, 41);
+			picSemaforoEste.Size =
+			picSemaforoOeste.Size = new Size(41, 56);
+
 		}
 
 		private void btnIniciar_Click(object sender, EventArgs e)
@@ -89,9 +275,6 @@ namespace PruebaSemaforo
 			_detener = true;
 
 			Iniciar();
-			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
-			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
@@ -102,155 +285,167 @@ namespace PruebaSemaforo
 		}
 		int fase;
 		// Función que se ejecuta cada segundo
-		private void Timer_Tick(object sender, EventArgs e)
-		{
-			segundos += 0.5; // Incrementar el contador de segundos
+		//private void Timer_Tick(object sender, EventArgs e)
+		//{
+		//	segundos += 0.5; // Incrementar el contador de segundos
 
-			double valor = 1;
-			try
-			{
+		//	double valor = 1;
+		//	try
+		//	{
 				
-				valor = semaforo.SemaforoTiempo(segundos);
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
-			if (semaforo.Fase != fase)
-			{
-				fase = semaforo.Fase;
-				ApagarSemaforos(semaforo.blnNorte_Sur);
-				timer.Stop();
-				segundos = 1;
-				timer.Start();
-			}
-			if(semaforo.blnNorte_Sur)
-			{
-				rdbERojo.Checked = rdbWRojo.Checked = true;
+		//		valor = semaforo.SemaforoTiempo(segundos);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		MessageBox.Show(ex.Message);
+		//	}
+		//	if (semaforo.Fase != fase)
+		//	{
+		//		fase = semaforo.Fase;
+		//		ApagarSemaforos(semaforo.blnNorte_Sur);
+		//		timer.Stop();
+		//		segundos = 1;
+		//		timer.Start();
+		//	}
+		//	if(semaforo.blnNorte_Sur)
+		//	{
+		//		rdbERojo.Checked = rdbWRojo.Checked = true;
 
-				picSemaforoEste.Image = Image.FromFile(imagenRojo);
-				picSemaforoOeste.Image = Image.FromFile(imagenRojo);
-			}
-			else
-			{
-				rdbNRojo.Checked = rdbSRojo.Checked = true;
+		//		picSemaforoEste.Image = Image.FromFile(imagenRojo);
+		//		picSemaforoOeste.Image = Image.FromFile(imagenRojo);
+		//	}
+		//	else
+		//	{
+		//		rdbNRojo.Checked = rdbSRojo.Checked = true;
 
-				picSemaforoEste.Image = Image.FromFile(imagenRojo);
-				picSemaforoOeste.Image = Image.FromFile(imagenRojo);
-			}
-			switch (semaforo.Fase)
-			{
-				case 1 when semaforo.blnNorte_Sur:
-					try
-					{
-						picSemaforoNorte.Image = Image.FromFile(imagenVerde);
-					}
-					catch (Exception)
-					{
+		//		picSemaforoEste.Image = Image.FromFile(imagenRojo);
+		//		picSemaforoOeste.Image = Image.FromFile(imagenRojo);
+		//	}
+		//	switch (semaforo.Fase)
+		//	{
+		//		case 1 when semaforo.blnNorte_Sur:
+		//			try
+		//			{
+		//				picSemaforoNorte.Image = Image.FromFile(imagenVerde);
+		//			}
+		//			catch (Exception)
+		//			{
 
-						throw;
-					}
+		//				throw;
+		//			}
 					
-					picSemaforoSur.Image = Image.FromFile(imagenVerde);
-					rdbNVerde.Checked = true;
-					rdbSVerde.Checked = true;
-					rdbNAmbar.Checked = rdbNRojo.Checked = false;
-					rdbSAmbar.Checked = rdbSRojo.Checked = false;
-					rdbERojo.Checked = rdbWRojo.Checked = true;
-					break;
-				case 2 when semaforo.blnNorte_Sur:
-					if (semaforo.colorLetrero != fondo)
-					{
-						rdbNVerde.Checked = rdbSVerde.Checked = true;
-						picSemaforoNorte.Image = Image.FromFile(imagenVerde);
-						picSemaforoSur.Image = Image.FromFile(imagenVerde);
-					}
-					else
-					{
-						picSemaforoNorte.Image = Image.FromFile(imagenNormal);
-						picSemaforoSur.Image = Image.FromFile(imagenNormal);
-						rdbNVerde.Checked = rdbSVerde.Checked = false;
-					}
-					rdbNAmbar.Checked = rdbSAmbar.Checked = false;
-					rdbNRojo.Checked = rdbSRojo.Checked = false;
-					rdbERojo.Checked = rdbWRojo.Checked = true;
-					break;
-				case 3 when semaforo.blnNorte_Sur:
-					picSemaforoNorte.Image = Image.FromFile(imagenAmbar);
-					picSemaforoSur.Image = Image.FromFile(imagenAmbar);
-					rdbNVerde.Checked = rdbSVerde.Checked = false;
-					rdbNAmbar.Checked = rdbSAmbar.Checked = true;
-					rdbNRojo.Checked = rdbSRojo.Checked = false;
-					break;
-				case 4 when semaforo.blnNorte_Sur:
-					picSemaforoNorte.Image = Image.FromFile(imagenRojo);
-					picSemaforoSur.Image = Image.FromFile(imagenRojo);
-					rdbNVerde.Checked = rdbSVerde.Checked = false;
-					rdbNAmbar.Checked = rdbSAmbar.Checked = false;
-					rdbNRojo.Checked = rdbSRojo.Checked = true;
-					break;
-				case 1 when semaforo.blnEste_Oeste:
-					picSemaforoEste.Image = Image.FromFile(imagenVerde);
-					picSemaforoOeste.Image = Image.FromFile(imagenVerde);
-					rdbEVerde.Checked = true;
-					rdbWVerde.Checked = true;
-					rdbEAmbar.Checked = rdbERojo.Checked = false;
-					rdbWAmbar.Checked = rdbWRojo.Checked = false;
-					break;
-				case 2 when semaforo.blnEste_Oeste:
-					if (semaforo.colorLetrero != fondo)
-					{
-						rdbEVerde.Checked = rdbWVerde.Checked = true;
-						picSemaforoEste.Image = Image.FromFile(imagenVerde);
-						picSemaforoOeste.Image = Image.FromFile(imagenVerde);
-					}
-					else
-					{
-						rdbEVerde.Checked = rdbWVerde.Checked = false;
-						picSemaforoEste.Image = Image.FromFile(imagenNormal);
-						picSemaforoOeste.Image = Image.FromFile(imagenNormal);
-					}
-					rdbEAmbar.Checked = rdbWAmbar.Checked = false;
-					rdbERojo.Checked = rdbWRojo.Checked = false;
-					break;
-				case 3 when semaforo.blnEste_Oeste:
-					picSemaforoEste.Image = Image.FromFile(imagenAmbar);
-					picSemaforoOeste.Image = Image.FromFile(imagenAmbar);
-					rdbEVerde.Checked = rdbWVerde.Checked = false;
-					rdbEAmbar.Checked = rdbWAmbar.Checked = true;
-					rdbERojo.Checked = rdbWRojo.Checked = false;
-					break;
-				case 4 when semaforo.blnEste_Oeste:
-					picSemaforoEste.Image = Image.FromFile(imagenRojo);
-					picSemaforoOeste.Image = Image.FromFile(imagenRojo);
-					rdbEVerde.Checked = rdbWVerde.Checked = false;
-					rdbEAmbar.Checked = rdbWAmbar.Checked = false;
-					rdbERojo.Checked = rdbWRojo.Checked = true;
-					break;
-				default:
-					break;
-			}
-			FormatoContador(Math.Truncate(valor)+"", semaforo.colorLetrero); // Actualizar la etiqueta con el nuevo valor
-			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
-			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
-		}
+		//			picSemaforoSur.Image = Image.FromFile(imagenVerde);
+		//			rdbNVerde.Checked = true;
+		//			rdbSVerde.Checked = true;
+		//			rdbNAmbar.Checked = rdbNRojo.Checked = false;
+		//			rdbSAmbar.Checked = rdbSRojo.Checked = false;
+		//			rdbERojo.Checked = rdbWRojo.Checked = true;
+		//			break;
+		//		case 2 when semaforo.blnNorte_Sur:
+		//			if (semaforo.colorLetrero != fondo)
+		//			{
+		//				rdbNVerde.Checked = rdbSVerde.Checked = true;
+		//				picSemaforoNorte.Image = Image.FromFile(imagenVerde);
+		//				picSemaforoSur.Image = Image.FromFile(imagenVerde);
+		//			}
+		//			else
+		//			{
+		//				picSemaforoNorte.Image = Image.FromFile(imagenNormal);
+		//				picSemaforoSur.Image = Image.FromFile(imagenNormal);
+		//				rdbNVerde.Checked = rdbSVerde.Checked = false;
+		//			}
+		//			rdbNAmbar.Checked = rdbSAmbar.Checked = false;
+		//			rdbNRojo.Checked = rdbSRojo.Checked = false;
+		//			rdbERojo.Checked = rdbWRojo.Checked = true;
+		//			break;
+		//		case 3 when semaforo.blnNorte_Sur:
+		//			picSemaforoNorte.Image = Image.FromFile(imagenAmbar);
+		//			picSemaforoSur.Image = Image.FromFile(imagenAmbar);
+		//			rdbNVerde.Checked = rdbSVerde.Checked = false;
+		//			rdbNAmbar.Checked = rdbSAmbar.Checked = true;
+		//			rdbNRojo.Checked = rdbSRojo.Checked = false;
+		//			break;
+		//		case 4 when semaforo.blnNorte_Sur:
+		//			picSemaforoNorte.Image = Image.FromFile(imagenRojo);
+		//			picSemaforoSur.Image = Image.FromFile(imagenRojo);
+		//			rdbNVerde.Checked = rdbSVerde.Checked = false;
+		//			rdbNAmbar.Checked = rdbSAmbar.Checked = false;
+		//			rdbNRojo.Checked = rdbSRojo.Checked = true;
+		//			break;
+		//		case 1 when semaforo.blnEste_Oeste:
+		//			picSemaforoEste.Image = Image.FromFile(imagenVerde);
+		//			picSemaforoOeste.Image = Image.FromFile(imagenVerde);
+		//			rdbEVerde.Checked = true;
+		//			rdbWVerde.Checked = true;
+		//			rdbEAmbar.Checked = rdbERojo.Checked = false;
+		//			rdbWAmbar.Checked = rdbWRojo.Checked = false;
+		//			break;
+		//		case 2 when semaforo.blnEste_Oeste:
+		//			if (semaforo.colorLetrero != fondo)
+		//			{
+		//				rdbEVerde.Checked = rdbWVerde.Checked = true;
+		//				picSemaforoEste.Image = Image.FromFile(imagenVerde);
+		//				picSemaforoOeste.Image = Image.FromFile(imagenVerde);
+		//			}
+		//			else
+		//			{
+		//				rdbEVerde.Checked = rdbWVerde.Checked = false;
+		//				picSemaforoEste.Image = Image.FromFile(imagenNormal);
+		//				picSemaforoOeste.Image = Image.FromFile(imagenNormal);
+		//			}
+		//			rdbEAmbar.Checked = rdbWAmbar.Checked = false;
+		//			rdbERojo.Checked = rdbWRojo.Checked = false;
+		//			break;
+		//		case 3 when semaforo.blnEste_Oeste:
+		//			picSemaforoEste.Image = Image.FromFile(imagenAmbar);
+		//			picSemaforoOeste.Image = Image.FromFile(imagenAmbar);
+		//			rdbEVerde.Checked = rdbWVerde.Checked = false;
+		//			rdbEAmbar.Checked = rdbWAmbar.Checked = true;
+		//			rdbERojo.Checked = rdbWRojo.Checked = false;
+		//			break;
+		//		case 4 when semaforo.blnEste_Oeste:
+		//			picSemaforoEste.Image = Image.FromFile(imagenRojo);
+		//			picSemaforoOeste.Image = Image.FromFile(imagenRojo);
+		//			rdbEVerde.Checked = rdbWVerde.Checked = false;
+		//			rdbEAmbar.Checked = rdbWAmbar.Checked = false;
+		//			rdbERojo.Checked = rdbWRojo.Checked = true;
+		//			break;
+		//		default:
+		//			break;
+		//	}
+		//	FormatoContador(Math.Truncate(valor)+"", semaforo.colorLetrero); // Actualizar la etiqueta con el nuevo valor
+		//	picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+		//	picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
+		//	picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+		//}
 		Timer _timer2;
 		private void btnDetener_Click(object sender, EventArgs e)
 		{
 			// Activar la variable de detener para salir del bucle
 			_detener = true;
-			timer.Stop(); // Detener el temporizador
+			timerx.Stop(); // Detener el temporizador
+			segundos = 0;
+			ptimer.Stop();
+			lblCrono.Text = "0";
+			segun = 0;
+			milisegundos = 0;
 			groupBox2.BackColor = fondo;
 			lblContador.BackColor = fondo;
 			lblContador.ForeColor = fondo;
-			picSemaforoNorte.Image = Image.FromFile(imagenNormal);
-			picSemaforoSur.Image = Image.FromFile(imagenNormal);
-			picSemaforoEste.Image = Image.FromFile(imagenNormal);
-			picSemaforoOeste.Image = Image.FromFile(imagenNormal);
-			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
-			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+
+			Bitmap TempNorte = new Bitmap(imagenNormal);
+			TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
+			Bitmap TempSur = new Bitmap(imagenNormal);
+			TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
+			Bitmap TempOeste = new Bitmap(imagenNormal);
+			TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
+			Bitmap TempEste = new Bitmap(imagenNormal);
+
+			picSemaforoNorte.Image = TempNorte;
+			picSemaforoSur.Image = TempSur;
+			picSemaforoOeste.Image = TempOeste;
+			picSemaforoEste.Image = TempEste;
+
 			_timer2 = new Timer();
 			_timer2.Interval = 2000; // 2000 ms = 2 segundos
 			_timer2.Tick += Timer_Tick2;
@@ -258,9 +453,7 @@ namespace PruebaSemaforo
 
 		private void Timer_Tick2(object sender, EventArgs e)
 		{
-			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
-			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+			
 			_timer2.Stop();
 		}
 
@@ -315,6 +508,9 @@ namespace PruebaSemaforo
 		private void btnInter_Click(object sender, EventArgs e)
 		{
 			timer.Stop();
+			ptimer.Stop();
+			lblCrono.Text = "0";
+			timerx.Stop();
 			// Reiniciar variable de detener
 			_detener = false;
 
@@ -323,9 +519,7 @@ namespace PruebaSemaforo
 			_timer.Interval = 500; // 500 ms = medio segundo
 			_timer.Tick += Timer_Tick1; // Asignar el manejador de eventos
 			_timer.Start(); // Iniciar el temporizador
-			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
-			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+			
 		}
 		private void Timer_Tick1(object sender, EventArgs e)
 		{
@@ -335,24 +529,38 @@ namespace PruebaSemaforo
 				x = 2;
 				lblContador.Text = "00";
 				lblContador.ForeColor = amarillo;
-				
-				rdbNAmbar.Checked =
-				rdbSAmbar.Checked =
-				rdbEAmbar.Checked =
-				rdbWAmbar.Checked = true;
-				picSemaforoNorte.Image = Image.FromFile(imagenAmbar);
-				picSemaforoSur.Image = Image.FromFile(imagenAmbar);
-				picSemaforoEste.Image = Image.FromFile(imagenAmbar);
-				picSemaforoOeste.Image = Image.FromFile(imagenAmbar);
+
+
+				Bitmap TempNorte = new Bitmap(imagenAmbar);
+				TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
+				Bitmap TempSur = new Bitmap(imagenAmbar);
+				TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
+				Bitmap TempOeste = new Bitmap(imagenAmbar);
+				TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
+				Bitmap TempEste = new Bitmap(imagenAmbar);
+
+				picSemaforoNorte.Image = TempNorte;
+				picSemaforoSur.Image = TempSur;
+				picSemaforoOeste.Image = TempOeste;
+				picSemaforoEste.Image = TempEste;
 			}
 			else
 			{
 				lblContador.Text = "00";
 				lblContador.ForeColor = fondo;
-				picSemaforoNorte.Image = Image.FromFile(imagenNormal);
-				picSemaforoSur.Image = Image.FromFile(imagenNormal);
-				picSemaforoEste.Image = Image.FromFile(imagenNormal);
-				picSemaforoOeste.Image = Image.FromFile(imagenNormal);
+
+				Bitmap TempNorte = new Bitmap(imagenNormal);
+				TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
+				Bitmap TempSur = new Bitmap(imagenNormal);
+				TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
+				Bitmap TempOeste = new Bitmap(imagenNormal);
+				TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
+				Bitmap TempEste = new Bitmap(imagenNormal);
+
+				picSemaforoNorte.Image = TempNorte;
+				picSemaforoSur.Image = TempSur;
+				picSemaforoOeste.Image = TempOeste;
+				picSemaforoEste.Image = TempEste;
 				ApagarSemaforos(true);
 				ApagarSemaforos(false);
 				x = 1;
@@ -367,19 +575,22 @@ namespace PruebaSemaforo
 				// Liberar los recursos del temporizador
 				_timer.Dispose();
 				_timer = null;
-				picSemaforoNorte.Image = Image.FromFile(imagenNormal);
-				picSemaforoSur.Image = Image.FromFile(imagenNormal);
-				picSemaforoEste.Image = Image.FromFile(imagenNormal);
-				picSemaforoOeste.Image = Image.FromFile(imagenNormal);
-				picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-				picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
-				picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+
+				Bitmap TempNorte = new Bitmap(imagenNormal);
+				TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
+				Bitmap TempSur = new Bitmap(imagenNormal);
+				TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
+				Bitmap TempOeste = new Bitmap(imagenNormal);
+				TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
+				Bitmap TempEste = new Bitmap(imagenNormal);
+
+				picSemaforoNorte.Image = TempNorte;
+				picSemaforoSur.Image = TempSur;
+				picSemaforoOeste.Image = TempOeste;
+				picSemaforoEste.Image = TempEste;
 
 				return;
 			}
-			picSemaforoNorte.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-			picSemaforoSur.Image.RotateFlip(RotateFlipType.Rotate270FlipX);
-			picSemaforoOeste.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
 		}
 	}
 }

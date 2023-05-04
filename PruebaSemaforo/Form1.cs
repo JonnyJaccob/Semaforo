@@ -117,7 +117,7 @@ namespace PruebaSemaforo
 			AcomodarSemaforo();
 		}
 		int FASES = 1;
-		int Segverde1 = 8;
+		int Segverde1 = 17;
 		int SegVerde2 = 3;
 		int SegAmbar = 3;
 		int SegRojo = 2;

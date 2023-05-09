@@ -94,15 +94,17 @@ namespace PruebaSemaforo
 			timerx.Start();
 			ptimer.Stop();
 			lblCrono.Text = "0";
-			segun = 0;
+			segun = 1;
 			milisegundos = 0;
 			ptimer.Start();
-			segundos = 0; // Reiniciar el contador de segundos
+			segundos = 1; // Reiniciar el contador de segundos
 			fase = 1;
 			FASES = 1;
+			lblContador.Text = "1";
+			lblCrono.Text = "1";
 			semaforo = new Semaforo();
 			blnNorte_Sur = true;
-			FormatoContador("0", verde); // Actualizar la etiqueta con el valor inicial
+			FormatoContador(segundos.ToString(), verde); // Actualizar la etiqueta con el valor inicial
 		}
 		private void Ptimer_Tick(object sender, EventArgs e)
 		{
@@ -117,7 +119,7 @@ namespace PruebaSemaforo
 			AcomodarSemaforo();
 		}
 		int FASES = 1;
-		int Segverde1 = 17;
+		int Segverde1 = 5;
 		int SegVerde2 = 3;
 		int SegAmbar = 3;
 		int SegRojo = 2;
@@ -129,7 +131,7 @@ namespace PruebaSemaforo
 			double valor = Math.Truncate(segundos);
 			switch (FASES)
 			{
-				case 1 when (segundos > 0 && segundos <= Segverde1):
+				case 1 when (segundos >= 1 && segundos <= Segverde1):
 					FormatoContador(valor.ToString(), verde);
 					strColor = "Verde";
 					break;
@@ -176,14 +178,7 @@ namespace PruebaSemaforo
 					segun = 0;
 					milisegundos = 500;
 					break;
-				case 4 when (segundos > 0.5 && segundos <= SegRojo):
-					if (segundos >= 1)
-					{
-						FormatoContador(valor.ToString(), rojo);
-						strColor = "Rojo";
-					}
-					break;
-				case 4 when (segundos == SegRojo + 0.5):
+				case 4 when (segundos == SegRojo + 1):
 					FormatoContador(valor.ToString(), fondo);
 					strColor = "Fondo";
 					FASES = 1;
@@ -193,11 +188,20 @@ namespace PruebaSemaforo
 					if (blnNorte_Sur)
 					{
 						blnNorte_Sur = false;
-					} else
+					}
+					else
 					{
 						blnNorte_Sur = true;
 					}
 					break;
+				case 4 when (segundos > 0.5 ):
+					if (segundos >= 1)
+					{
+						FormatoContador(valor.ToString(), rojo);
+						strColor = "Rojo";
+					}
+					break;
+				
 				default:
 					break;
 			}
@@ -527,7 +531,7 @@ namespace PruebaSemaforo
 			if (x == 1)
 			{
 				x = 2;
-				lblContador.Text = "00";
+				lblContador.Text = "0";
 				lblContador.ForeColor = amarillo;
 
 

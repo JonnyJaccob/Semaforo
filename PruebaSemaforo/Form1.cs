@@ -68,6 +68,7 @@ namespace PruebaSemaforo
 		private static string imagenVerde = Path.Combine(rutaBase, "SemaforoVerde1.png");
 		private static string imagenAmbar = Path.Combine(rutaBase, "SemaforoAmarillo1.png");
 		private static string imagenRojo = Path.Combine(rutaBase, "SemaforoRojo1.png");
+		public int loquesea = 0;
 
 		private void btnSalir_Click(object sender, EventArgs e)
 		{
@@ -79,7 +80,8 @@ namespace PruebaSemaforo
 			if (valor.Length > 1)
 			{
 				lblContador.Text = valor;
-			} else
+			}
+			else
 			{
 				lblContador.Text = " " + valor;
 			}
@@ -94,17 +96,16 @@ namespace PruebaSemaforo
 			timerx.Start();
 			ptimer.Stop();
 			lblCrono.Text = "0";
-			segun = 1;
+			segun = 0;
 			milisegundos = 0;
 			ptimer.Start();
-			segundos = 1; // Reiniciar el contador de segundos
+			segundos = 0; // Reiniciar el contador de segundos
 			fase = 1;
 			FASES = 1;
-			lblContador.Text = "1";
-			lblCrono.Text = "1";
 			semaforo = new Semaforo();
 			blnNorte_Sur = true;
-			FormatoContador(segundos.ToString(), verde); // Actualizar la etiqueta con el valor inicial
+			FormatoContador("", verde); // Actualizar la etiqueta con el valor inicial
+
 		}
 		private void Ptimer_Tick(object sender, EventArgs e)
 		{
@@ -119,7 +120,7 @@ namespace PruebaSemaforo
 			AcomodarSemaforo();
 		}
 		int FASES = 1;
-		int Segverde1 = 5;
+		int Segverde1 = 17;
 		int SegVerde2 = 3;
 		int SegAmbar = 3;
 		int SegRojo = 2;
@@ -131,9 +132,21 @@ namespace PruebaSemaforo
 			double valor = Math.Truncate(segundos);
 			switch (FASES)
 			{
-				case 1 when (segundos >= 1 && segundos <= Segverde1):
-					FormatoContador(valor.ToString(), verde);
-					strColor = "Verde";
+				case 1 when (segundos > 0 && segundos <= Segverde1):
+					if (valor.ToString() == "0")
+					{
+						FormatoContador("", verde);
+						strColor = "Fondo";
+
+
+					}
+					else
+					{
+
+						FormatoContador(valor.ToString(), verde);
+						strColor = "Verde";
+					}
+
 					break;
 				case 1 when (segundos == Segverde1 + 0.5):
 					FormatoContador(valor.ToString(), fondo);
@@ -178,11 +191,18 @@ namespace PruebaSemaforo
 					segun = 0;
 					milisegundos = 500;
 					break;
-				case 4 when (segundos == SegRojo + 1):
+				case 4 when (segundos > 0.5 && segundos <= SegRojo):
+					if (segundos >= 1)
+					{
+						FormatoContador(valor.ToString(), rojo);
+						strColor = "Rojo";
+					}
+					break;
+				case 4 when (segundos == SegRojo + 0.5):
 					FormatoContador(valor.ToString(), fondo);
 					strColor = "Fondo";
 					FASES = 1;
-					segundos = 1;
+					segundos = 0.5;
 					segun = 0;
 					milisegundos = 1000;
 					if (blnNorte_Sur)
@@ -194,14 +214,6 @@ namespace PruebaSemaforo
 						blnNorte_Sur = true;
 					}
 					break;
-				case 4 when (segundos > 0.5 ):
-					if (segundos >= 1)
-					{
-						FormatoContador(valor.ToString(), rojo);
-						strColor = "Rojo";
-					}
-					break;
-				
 				default:
 					break;
 			}
@@ -229,21 +241,42 @@ namespace PruebaSemaforo
 		}
 		private void CambiarSemaforo(string ruta, bool IsNorteSur)
 		{
-			
+
 			if (IsNorteSur)
 			{
-				Bitmap TempNorte = new Bitmap(ruta);
-				TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
-				Bitmap TempSur = new Bitmap(ruta);
-				TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
-				Bitmap TempOeste = new Bitmap(imagenRojo);
-				TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
-				Bitmap TempEste = new Bitmap(imagenRojo);
 
-				picSemaforoNorte.Image = TempNorte;
-				picSemaforoSur.Image = TempSur;
-				picSemaforoOeste.Image = TempOeste;
-				picSemaforoEste.Image = TempEste;
+
+				if (ruta == "C:\\Users\\luisg\\OneDrive\\Escritorio\\sema\\Semaforo-main\\PruebaSemaforo\\bin\\Debug\\SemaforoApag1_2.png" && loquesea < 3)
+				{
+					Bitmap TempNorte = new Bitmap(ruta);
+					TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
+					Bitmap TempSur = new Bitmap(ruta);
+					TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
+					Bitmap TempOeste = new Bitmap(ruta);
+					TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
+					Bitmap TempEste = new Bitmap(ruta);
+
+					picSemaforoNorte.Image = TempNorte;
+					picSemaforoSur.Image = TempSur;
+					picSemaforoOeste.Image = TempOeste;
+					picSemaforoEste.Image = TempEste;
+				}
+				else
+				{
+					Bitmap TempNorte = new Bitmap(ruta);
+					TempNorte.RotateFlip(RotateFlipType.Rotate90FlipX);
+					Bitmap TempSur = new Bitmap(ruta);
+					TempSur.RotateFlip(RotateFlipType.Rotate270FlipX);
+					Bitmap TempOeste = new Bitmap(imagenRojo);
+					TempOeste.RotateFlip(RotateFlipType.Rotate180FlipX);
+					Bitmap TempEste = new Bitmap(imagenRojo);
+
+					picSemaforoNorte.Image = TempNorte;
+					picSemaforoSur.Image = TempSur;
+					picSemaforoOeste.Image = TempOeste;
+					picSemaforoEste.Image = TempEste;
+				}
+				loquesea++;
 			}
 			else
 			{
@@ -296,7 +329,7 @@ namespace PruebaSemaforo
 		//	double valor = 1;
 		//	try
 		//	{
-				
+
 		//		valor = semaforo.SemaforoTiempo(segundos);
 		//	}
 		//	catch (Exception ex)
@@ -337,7 +370,7 @@ namespace PruebaSemaforo
 
 		//				throw;
 		//			}
-					
+
 		//			picSemaforoSur.Image = Image.FromFile(imagenVerde);
 		//			rdbNVerde.Checked = true;
 		//			rdbSVerde.Checked = true;
@@ -457,7 +490,7 @@ namespace PruebaSemaforo
 
 		private void Timer_Tick2(object sender, EventArgs e)
 		{
-			
+
 			_timer2.Stop();
 		}
 
@@ -486,7 +519,7 @@ namespace PruebaSemaforo
 		}
 		private void ApagarSemaforos(bool IsBlnNorte_Sur)
 		{
-			if(!IsBlnNorte_Sur)
+			if (!IsBlnNorte_Sur)
 			{
 				rdbNVerde.Checked = false;
 				rdbNAmbar.Checked = false;
@@ -507,13 +540,13 @@ namespace PruebaSemaforo
 		}
 		private bool _detener = false;
 		int x = 1;
-		
+
 		private Timer _timer;
 		private void btnInter_Click(object sender, EventArgs e)
 		{
 			timer.Stop();
 			ptimer.Stop();
-			lblCrono.Text = "0";
+			lblCrono.Text = "1";
 			timerx.Stop();
 			// Reiniciar variable de detener
 			_detener = false;
@@ -523,7 +556,7 @@ namespace PruebaSemaforo
 			_timer.Interval = 500; // 500 ms = medio segundo
 			_timer.Tick += Timer_Tick1; // Asignar el manejador de eventos
 			_timer.Start(); // Iniciar el temporizador
-			
+
 		}
 		private void Timer_Tick1(object sender, EventArgs e)
 		{
@@ -531,7 +564,7 @@ namespace PruebaSemaforo
 			if (x == 1)
 			{
 				x = 2;
-				lblContador.Text = "0";
+				lblContador.Text = " 0";
 				lblContador.ForeColor = amarillo;
 
 
@@ -550,7 +583,7 @@ namespace PruebaSemaforo
 			}
 			else
 			{
-				lblContador.Text = "00";
+				lblContador.Text = " 0";
 				lblContador.ForeColor = fondo;
 
 				Bitmap TempNorte = new Bitmap(imagenNormal);
@@ -595,6 +628,21 @@ namespace PruebaSemaforo
 
 				return;
 			}
+		}
+
+		private void lblContador_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void lblCrono_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void picSemaforoNorte_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

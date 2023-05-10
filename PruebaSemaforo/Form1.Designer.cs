@@ -400,6 +400,7 @@
 			this.lblCrono.TabIndex = 10;
 			this.lblCrono.Text = "00:00.00";
 			this.lblCrono.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.lblCrono.Visible = false;
 			// 
 			// Form1
 			// 
